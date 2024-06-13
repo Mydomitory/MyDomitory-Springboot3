@@ -39,6 +39,7 @@ public class BoardService {
     }
 
 
+    //이전 글 조회
     public Board findPreviousPost(Long id) {
         Board currentPost =  boardRepository.findById(id)
                 .orElseThrow(()->new IllegalArgumentException("Post not found with id: " + id));
@@ -47,6 +48,14 @@ public class BoardService {
                 .orElseThrow(() -> new IllegalArgumentException("No previous post found"));
     }
 
+    //다음 글 조회
+    public Board findNextPost(Long id){
+        Board currentPost=boardRepository.findById(id)
+                .orElseThrow(()-> new IllegalArgumentException("Post not found with id: " + id));
+        return boardRepository.findFirstByCreatedAtGreaterThanOrderByCreatedAtAsc(currentPost.getCreatedAt())
+                .orElseThrow(()-> new IllegalArgumentException("No next post found"));
+    }
+    
     public Board update(Long id, UpdateBoardRequest request) {
         Board board = boardRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Board not found with id: " + id));
